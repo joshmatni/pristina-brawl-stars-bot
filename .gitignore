@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 src/bsBot
 src/.env
+.DS_Store
 # C extensions
 *.so
 
