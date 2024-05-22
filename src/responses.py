@@ -17,7 +17,7 @@ def get_response(user_input: str) -> str:
                        "BRAWL STARS FOREVAAA!!"])
     raise NotImplementedError("Code is missing...")
 
-def get_player_stats(player_tag: str): # player_tag: str
+def get_player_stats(player_tag: str):
     BS_API_KEY = os.getenv('BS_API_KEY')
     load_dotenv()
     url = f'https://api.brawlstars.com/v1/players/%23{player_tag}'
