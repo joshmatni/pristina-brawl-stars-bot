@@ -1,25 +1,48 @@
-import discord
-from discord.ext import commands
+import os
+from discord import Intents, Client, Message
+from dotenv import load_dotenv
+from responses import get_response
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
 
-# Load configuration
-import config
+intents = Intents.default()
+intents.message_content = True
+client = Client(intents=intents)
 
-# Initialize bot
-bot = commands.Bot(command_prefix='!')
+async def send_message(message: Message, user_message: str) -> None:
+    if not user_message:
+        print("Message was empty... (Intents not enabled properly")
+        return
+    
+    if is_private := user_message[0] == "?":
+        user_message = user_message[1:]
+    
+    try:
+        response = get_response(user_message)
+        await message.author.send(response) if is_private else await message.channel.send(response)
+    except Exception as e:
+        print(e) # replace with logging
 
-@bot.event
-async def on_ready():
-    print(f'Logged in as {bot.user.name}')
 
-bot.run(config.DISCORD_TOKEN)
+# handle start up for bot
+@client.event
+async def on_ready() -> None:
+    print(f"{client.user} is now running!")
 
-import requests
+@client.event # handles incoming messages
+async def on_message(message: Message) -> None:
+    if message.author == client.user: # so bot doesnt infinitely respond to itself
+        return
+    
+    username = str(message.author)
+    user_message = message.content
+    channel = str(message.channel)
 
-def get_player_stats(tag):
-    url = f"https://api.brawlstars.com/v1/players/%23{tag}"
-    headers = {
-        'Authorization': f'Bearer {config.BRAWL_API_KEY}',
-        'Accept': 'application/json'
-    }
-    response = requests.get(url, headers=headers)
-    return response.json()
+    print(f'[{channel}] {username}: "{user_message}"')
+    await send_message(message, user_message)
+
+def main() -> None:
+    client.run(token=TOKEN)
+
+if __name__ == '__main__':
+    main()

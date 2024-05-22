@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 src/bsBot
+src/.env
 # C extensions
 *.so
 
