@@ -39,7 +39,13 @@ async def on_message(message: Message) -> None:
     if content.startswith('!bsrank '):
         args = content.split(' ')[1:]  # Split the command into parts after '!bsrank'
         if len(args) < 2:
-            await message.channel.send("Please provide both a player tag and a brawler's name.")
+            await message.channel.send("Usage: `!bsrank <player tag> <brawler name>`\nExample: `!bsrank #ABC123 Leon`")
+            try:
+                brawler_list = responses.get_brawler_list()  # Assuming there's a function to fetch all brawler names
+                brawlers_formatted = ', '.join(brawler_list)
+                await message.channel.send(f"Available Brawlers: {brawlers_formatted}")
+            except Exception as e:
+                await message.channel.send("Error fetching list of brawlers: " + str(e))
             return
 
         player_tag, brawler_name = args[0], ' '.join(args[1:])
@@ -48,23 +54,16 @@ async def on_message(message: Message) -> None:
         player_tag = player_tag.upper()
 
         try:
-            player_stats = responses.get_player_stats(player_tag)
-            trophies = player_stats.get('trophies', 'N/A')
-            expLevel = player_stats.get('expLevel', 'N/A')
-            vs3Victories = player_stats.get('3vs3Victories', 'N/A')
-
-            # Find the specified brawler in the list
+            player_stats = responses.get_player_metrics(player_tag)
             brawlers_info = player_stats.get('brawlers', [])
             brawler_info = next((brawler for brawler in brawlers_info if brawler['name'].upper() == brawler_name.upper()), None)
 
             if brawler_info:
                 brawler_stats = (f"Brawler Name: {brawler_info['name']}, Rank: {brawler_info['rank']}, "
                                 f"Trophies: {brawler_info['trophies']}, Highest Trophies: {brawler_info['highestTrophies']}")
-                message_to_send = f"Brawler Stats: {brawler_stats}"
+                await message.channel.send(f"Brawler Stats: {brawler_stats}")
             else:
-                message_to_send = "No such brawler found."
-
-            await message.channel.send(f"Player and Brawler Info: {message_to_send}")
+                await message.channel.send("No such brawler found or incorrect brawler name.")
         except Exception as e:
             await message.channel.send(f"Error fetching player info: {str(e)}")
 
@@ -78,8 +77,8 @@ async def on_message(message: Message) -> None:
         brawler, player1_tag, player2_tag = args
         try:
             # Fetch player stats
-            player1_stats = responses.get_player_stats(player1_tag)
-            player2_stats = responses.get_player_stats(player2_tag)
+            player1_stats = responses.get_player_metrics(player1_tag)
+            player2_stats = responses.get_player_metrics(player2_tag)
             # Predict outcome
             prediction = responses.predict_outcome(player1_stats, player2_stats, brawler)
             await message.channel.send(f"Prediction: {prediction}")
