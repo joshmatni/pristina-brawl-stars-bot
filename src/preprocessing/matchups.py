@@ -28,7 +28,6 @@ df['score'] = df.apply(calculate_weighted_score, axis=1)
 # Generate all matchups
 matchups = pd.DataFrame(list(combinations(df.index, 2)), columns=['Player1', 'Player2'])
 
-# Function to determine the winner based on scores
 def determine_winner(row):
     player1 = df.loc[row['Player1']]
     player2 = df.loc[row['Player2']]
