@@ -36,23 +36,55 @@ async def on_message(message: Message) -> None:
         return
 
     content = message.content
-    if content.startswith('!stats '):
-        player_tag = content.split('!stats ')[1].strip()  # Remove any extra spaces
+    if content.startswith('!bsrank '):
+        args = content.split(' ')[1:]  # Split the command into parts after '!bsrank'
+        if len(args) < 2:
+            await message.channel.send("Please provide both a player tag and a brawler's name.")
+            return
+
+        player_tag, brawler_name = args[0], ' '.join(args[1:])
+        if player_tag[0] == '#':
+            player_tag = player_tag[1:]
+        player_tag = player_tag.upper()
+
         try:
-            battle_log = responses.get_player_stats(player_tag)
-            brawlers_info = battle_log.get('brawlers', [])[:3]  # Get the first three brawlers
-            if brawlers_info:
-                message_to_send = ""
-                for brawler in brawlers_info:
-                    message_to_send += (f"Name: {brawler['name']}, Power: {brawler['power']}, Rank: {brawler['rank']}, "
-                                        f"Trophies: {brawler['trophies']}, Highest Trophies: {brawler['highestTrophies']}\n")
-                await message.channel.send(f"Brawler Info: {message_to_send}")
+            player_stats = responses.get_player_stats(player_tag)
+            trophies = player_stats.get('trophies', 'N/A')
+            expLevel = player_stats.get('expLevel', 'N/A')
+            vs3Victories = player_stats.get('3vs3Victories', 'N/A')
+
+            # Find the specified brawler in the list
+            brawlers_info = player_stats.get('brawlers', [])
+            brawler_info = next((brawler for brawler in brawlers_info if brawler['name'].upper() == brawler_name.upper()), None)
+
+            if brawler_info:
+                brawler_stats = (f"Brawler Name: {brawler_info['name']}, Rank: {brawler_info['rank']}, "
+                                f"Trophies: {brawler_info['trophies']}, Highest Trophies: {brawler_info['highestTrophies']}")
+                message_to_send = f"Brawler Stats: {brawler_stats}"
             else:
-                await message.channel.send("No brawler information available")
+                message_to_send = "No such brawler found."
+
+            await message.channel.send(f"Player and Brawler Info: {message_to_send}")
         except Exception as e:
-            await message.channel.send(f"Error fetching brawler info: {str(e)}")
-    else:
-        await send_message(message, content)
+            await message.channel.send(f"Error fetching player info: {str(e)}")
+
+
+    elif content.startswith('!predict1v1 '):
+        args = content.split(' ')[1:]  # Get arguments after command
+        if len(args) != 3:
+            await message.channel.send("Usage: !predict1v1 <brawler> <player1> <player2>")
+            return
+
+        brawler, player1_tag, player2_tag = args
+        try:
+            # Fetch player stats
+            player1_stats = responses.get_player_stats(player1_tag)
+            player2_stats = responses.get_player_stats(player2_tag)
+            # Predict outcome
+            prediction = responses.predict_outcome(player1_stats, player2_stats, brawler)
+            await message.channel.send(f"Prediction: {prediction}")
+        except Exception as e:
+            await message.channel.send(f"Error processing prediction: {str(e)}")
 
 def main() -> None:
     client.run(token=TOKEN)

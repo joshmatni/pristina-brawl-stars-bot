@@ -1,33 +1,35 @@
-import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
+import pandas as pd
+import numpy as np
 
-# Example DataFrame
-data = {
-    'highestTrophies': [4000, 3000, 4500, 3200],
-    'expLevel': [100, 80, 120, 85],
-    '3vs3Victories': [200, 150, 240, 180],
-    'brawlerRank': [20, 15, 25, 18],
-    'outcome': [1, 0, 1, 0]  # 1 for win, 0 for lose
-}
+# Simulated DataFrame (replace this with actual data fetching and preprocessing)
+data = pd.DataFrame({
+    '3vs3Victories': np.random.randint(100, 500, 1000),
+    'expLevel': np.random.randint(1, 300, 1000),
+    'highestTrophies': np.random.randint(1000, 5000, 1000),
+    'rank': np.random.randint(1, 35, 1000),
+    'won_1v1': np.random.choice([0, 1], 1000)  # 0 for loss, 1 for win
+})
 
-df = pd.DataFrame(data)
+# Feature and target separation
+X = data[['3vs3Victories', 'expLevel', 'highestTrophies', 'rank']]
+y = data['won_1v1']
 
-# Assign weights
-weights = {'highestTrophies': 0.4, 'expLevel': 0.2, '3vs3Victories': 0.2, 'brawlerRank': 0.2}
-for column, weight in weights.items():
-    df[column] *= weight
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Prepare data for training
-X = df[['highestTrophies', 'expLevel', '3vs3Victories', 'brawlerRank']]
-y = df['outcome']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
-
-# Train model
+# Initialize and train the logistic regression model
 model = LogisticRegression()
 model.fit(X_train, y_train)
 
-# Predict and evaluate
+# Predict on test data
 predictions = model.predict(X_test)
-print(classification_report(y_test, predictions))
+accuracy = accuracy_score(y_test, predictions)
+print(f"Accuracy: {accuracy}")
+
+# Save model for later use
+import joblib
+joblib.dump(model, 'logistic_regression_model.pkl')
+
