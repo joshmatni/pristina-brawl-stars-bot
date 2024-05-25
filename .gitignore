@@ -5,6 +5,7 @@ __pycache__/
 src/bsBot
 src/.env
 .DS_Store
+src/preprocessing/models
 # C extensions
 *.so
 

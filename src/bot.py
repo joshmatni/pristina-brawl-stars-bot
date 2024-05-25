@@ -2,6 +2,7 @@ import os
 from discord import Intents, Client, Message
 from dotenv import load_dotenv
 import responses
+import joblib
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -71,19 +72,21 @@ async def on_message(message: Message) -> None:
     elif content.startswith('!predict1v1 '):
         args = content.split(' ')[1:]  # Get arguments after command
         if len(args) != 3:
-            await message.channel.send("Usage: !predict1v1 <brawler> <player1> <player2>")
+            await message.channel.send("Usage: !predict1v1 <brawler> <player1_tag> <player2_tag>")
             return
 
         brawler, player1_tag, player2_tag = args
-        try:
-            # Fetch player stats
-            player1_stats = responses.get_player_metrics(player1_tag)
-            player2_stats = responses.get_player_metrics(player2_tag)
-            # Predict outcome
-            prediction = responses.predict_outcome(player1_stats, player2_stats, brawler)
-            await message.channel.send(f"Prediction: {prediction}")
-        except Exception as e:
-            await message.channel.send(f"Error processing prediction: {str(e)}")
+        player1_stats = responses.get_player_metrics(player1_tag, brawler)
+        player2_stats = responses.get_player_metrics(player2_tag, brawler)
+        
+        if player1_stats and player2_stats:
+            # Pass player names along with their stats
+            prediction_message = responses.predict_outcome(player1_stats, player2_stats, player1_stats['player_name'], player2_stats['player_name'])
+            await message.channel.send(prediction_message)
+        else:
+            await message.channel.send("Error fetching player statistics. Please check the tags and brawler names.")
+
+
 
 def main() -> None:
     client.run(token=TOKEN)
