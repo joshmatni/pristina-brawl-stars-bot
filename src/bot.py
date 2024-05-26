@@ -78,11 +78,9 @@ async def on_message(message: Message) -> None:
         brawler, player1_tag, player2_tag = args
         player1_stats = responses.get_player_metrics(player1_tag, brawler)
         player2_stats = responses.get_player_metrics(player2_tag, brawler)
-        
         if player1_stats and player2_stats:
-            # Pass player names along with their stats
-            prediction_message = responses.predict_outcome(player1_stats, player2_stats, player1_stats['player_name'], player2_stats['player_name'])
-            await message.channel.send(prediction_message)
+            prediction_embed = responses.predict_outcome(player1_stats, player2_stats, player1_stats['player_name'], player2_stats['player_name'])
+            await message.channel.send(embed=prediction_embed)
         else:
             await message.channel.send("Error fetching player statistics. Please check the tags and brawler names.")
 
