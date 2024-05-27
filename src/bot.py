@@ -37,39 +37,7 @@ async def on_message(message: Message) -> None:
         return
 
     content = message.content
-    if content.startswith('!bsrank '):
-        args = content.split(' ')[1:]  # Split the command into parts after '!bsrank'
-        if len(args) < 2:
-            await message.channel.send("Usage: `!bsrank <player tag> <brawler name>`\nExample: `!bsrank #ABC123 Leon`")
-            try:
-                brawler_list = responses.get_brawler_list()  # Assuming there's a function to fetch all brawler names
-                brawlers_formatted = ', '.join(brawler_list)
-                await message.channel.send(f"Available Brawlers: {brawlers_formatted}")
-            except Exception as e:
-                await message.channel.send("Error fetching list of brawlers: " + str(e))
-            return
-
-        player_tag, brawler_name = args[0], ' '.join(args[1:])
-        if player_tag[0] == '#':
-            player_tag = player_tag[1:]
-        player_tag = player_tag.upper()
-
-        try:
-            player_stats = responses.get_player_metrics(player_tag)
-            brawlers_info = player_stats.get('brawlers', [])
-            brawler_info = next((brawler for brawler in brawlers_info if brawler['name'].upper() == brawler_name.upper()), None)
-
-            if brawler_info:
-                brawler_stats = (f"Brawler Name: {brawler_info['name']}, Rank: {brawler_info['rank']}, "
-                                f"Trophies: {brawler_info['trophies']}, Highest Trophies: {brawler_info['highestTrophies']}")
-                await message.channel.send(f"Brawler Stats: {brawler_stats}")
-            else:
-                await message.channel.send("No such brawler found or incorrect brawler name.")
-        except Exception as e:
-            await message.channel.send(f"Error fetching player info: {str(e)}")
-
-
-    elif content.startswith('!predict1v1 '):
+    if content.startswith('!predict1v1 '):
         args = content.split(' ')[1:]  # Get arguments after command
         if len(args) != 3:
             await message.channel.send("Usage: !predict1v1 <brawler> <player1_tag> <player2_tag>")
