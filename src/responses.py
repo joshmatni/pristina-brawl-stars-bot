@@ -51,6 +51,7 @@ def get_player_metrics(player_tag: str, specific_brawler: str):
                     '3vs3_victories': player_info['3vs3Victories'],
                     'brawler_name': brawler['name'],
                     'brawler_rank': brawler['rank'],
+                    'brawler_id': brawler['id']
                 }
     return None  # Return None if no brawler matches
 
@@ -88,25 +89,24 @@ def predict_outcome(player1_stats, player2_stats, player1_name, player2_name):
     player1_score = calculate_weighted_score(player1_stats)
     player2_score = calculate_weighted_score(player2_stats)
 
-    data = {
-        'Player1_Score': [player1_score],
-        'Player2_Score': [player2_score]
-    }
-    df = pd.DataFrame(data)
-    print(f'before scaled: {df}')
-    df_scaled = scaler.transform(df)  # Use transform, NOT fit_transform
-    outcome = model.predict(df_scaled)
+    outcome = model.predict([[player1_score, player2_score]])
     winner_name = player1_name if outcome[0] else player2_name
 
-    # Create a discord Embed for the result
-    embed = discord.Embed(title="1v1 Prediction Result", description="Comparison and prediction of player performance.", color=0x00ff00)
+    embed = discord.Embed(title=f"1v1 {player1_stats['brawler_name'].capitalize()} Prediction Result", 
+                          description="Comparison and prediction of player performance.", 
+                          color=discord.Colour.dark_purple())
     embed.add_field(name=f"{player1_name}", value=f"Score: {player1_score:.2f}\nLevel: {player1_stats['exp_level']}\nTrophies: {player1_stats['highest_account_trophies']}\n3vs3 Victories: {player1_stats['3vs3_victories']}\nRank: {player1_stats['brawler_rank']}", inline=True)
     embed.add_field(name=f"{player2_name}", value=f"Score: {player2_score:.2f}\nLevel: {player2_stats['exp_level']}\nTrophies: {player2_stats['highest_account_trophies']}\n3vs3 Victories: {player2_stats['3vs3_victories']}\nRank: {player2_stats['brawler_rank']}", inline=True)
     embed.add_field(name="Predicted Winner", value=winner_name, inline=False)
-    embed.set_footer(text="Prediction based on weighted scores of player stats.")
+
+    # Set thumbnail using the common brawler ID
+    print(player1_stats['brawler_id'])
+    print(player1_stats['brawler_name'])
+    brawler_icon_url = f"https://cdn.brawlify.com/brawler/{player1_stats['brawler_name'].capitalize()}.png?v=1"
+    embed.set_thumbnail(url=brawler_icon_url)
+    #embed.set_image(url=brawler_icon_url)
 
     return embed
-
 
 if __name__ == '__main__':
     get_player('pucypryg')
