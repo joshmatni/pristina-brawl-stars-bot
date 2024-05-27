@@ -34,33 +34,11 @@ async def on_ready() -> None:
     print(f"{bot.user} is now running!")
     await bot.tree.sync()
 
-# @bot.event # handles incoming messages
-# async def on_message(message: Message) -> None:
-#     if message.author == bot.user:  # so bot doesn't infinitely respond to itself
-#         return
-
-#     content = message.content
-#     if content.startswith('!predict1v1 '):
-#         args = content.split(' ')[1:]  # Get arguments after command
-#         if len(args) != 3:
-#             await message.channel.send("Usage: !predict1v1 <brawler> <player1_tag> <player2_tag>")
-#             return
-
-#         brawler, player1_tag, player2_tag = args
-#         player1_stats = responses.get_player_metrics(player1_tag, brawler)
-#         player2_stats = responses.get_player_metrics(player2_tag, brawler)
-#         if player1_stats and player2_stats:
-#             prediction_embed = responses.predict_outcome(player1_stats, player2_stats, player1_stats['player_name'], player2_stats['player_name'])
-#             await message.channel.send(embed=prediction_embed)
-#         else:
-#             await message.channel.send("Error fetching player statistics. Please check the tags and brawler names.")
-
-@bot.hybrid_command()
-async def predict(ctx, brawler: str, player1_tag: str, player2_tag: str):
+@bot.hybrid_command(description="Compares two players using a specified brawler to predict the winner of a 1v1 match.")
+async def predict1v1(ctx, brawler: str, player1_tag: str, player2_tag: str):
     if ctx.author == bot.user:  # Prevent bot from responding to itself
         return
 
-    # Assuming 'responses' is a module you've defined to handle these
     player1_stats = responses.get_player_metrics(player1_tag, brawler)
     player2_stats = responses.get_player_metrics(player2_tag, brawler)
 
@@ -69,7 +47,6 @@ async def predict(ctx, brawler: str, player1_tag: str, player2_tag: str):
         await ctx.send(embed=prediction_embed)  # Use `ctx.send()` to cover both message and interaction contexts
     else:
         await ctx.send("Error fetching player statistics. Please check the tags and brawler names.")
-
 
 
 def main() -> None:
