@@ -85,17 +85,16 @@ def predict_outcome(player1_stats, player2_stats, player1_name, player2_name):
     winner_name = player1_name if outcome[0] else player2_name
 
     embed = discord.Embed(title=f"1v1 {player1_stats['brawler_name'].capitalize()} Prediction Result", 
-                          description="🌟 Comparison and prediction of player performance.", 
+                          description="<:uhhhhh:1210245240040984637> Comparison and prediction of player performance.", 
                           color=discord.Colour.dark_purple())
 
     # Player details with score in bold
-    embed.add_field(name=f"{player1_name} - Details", value=f"🎚 Experience Level: {player1_stats['exp_level']}\n🏆 Trophies: {player1_stats['highest_account_trophies']}\n🥇 3vs3 Victories: {player1_stats['3vs3_victories']}\n{player1_stats['brawler_name'].capitalize()} Rank: {player1_stats['brawler_rank']}\n**Overall Score: {player1_score:.2f}**", inline=False)
-    embed.add_field(name=f"{player2_name} - Details", value=f"🎚 Experience Level: {player2_stats['exp_level']}\n🏆 Trophies: {player2_stats['highest_account_trophies']}\n🥇 3vs3 Victories: {player2_stats['3vs3_victories']}\n{player2_stats['brawler_name'].capitalize()} Rank: {player2_stats['brawler_rank']}\n**Overall Score: {player2_score:.2f}**", inline=False)
+    embed.add_field(name=f"<:RandomIcon:1245911036955987969> {player1_name}", value=f"<:brstar:1245904050747346997> Experience Level: {player1_stats['exp_level']}\n <:BStrophy:1245900269611520070> Trophies: {player1_stats['highest_account_trophies']}\n<:3vs3:1245909477669081179> 3vs3 Victories: {player1_stats['3vs3_victories']}\n<:rank40bs1:1245916371133399050> {player1_stats['brawler_name'].capitalize()} Rank: {player1_stats['brawler_rank']}\n**Overall Score: {player1_score:.2f}**", inline=False)
+    embed.add_field(name=f"<:RandomIcon:1245911036955987969> {player2_name}", value=f"<:brstar:1245904050747346997> Experience Level: {player2_stats['exp_level']}\n <:BStrophy:1245900269611520070> Trophies: {player2_stats['highest_account_trophies']}\n<:3vs3:1245909477669081179> 3vs3 Victories: {player2_stats['3vs3_victories']}\n<:rank40bs1:1245916371133399050> {player2_stats['brawler_name'].capitalize()} Rank: {player2_stats['brawler_rank']}\n**Overall Score: {player2_score:.2f}**", inline=False)
 
     # Predicted winner in a separate row
-    embed.add_field(name="👑Predicted Winner👑", value=winner_name, inline=False)
+    embed.add_field(name="<:AllStarLeague:1245902451593445478> Predicted Winner <:AllStarLeague:1245902451593445478>", value=winner_name, inline=False)
 
-    # Set thumbnail using the common brawler ID
     brawler_icon_url = f"https://cdn.brawlify.com/brawler/{player1_stats['brawler_name'].capitalize()}.png?v=1"
     embed.set_thumbnail(url=brawler_icon_url)
 
