@@ -1,6 +1,9 @@
 # Pristina: Brawl Stars Discord Bot
-<img src="img/pristina.jpeg" width="250" height="250" alt="Pristina"/>
-<img src="img/botpic.png" width="250" height="250" alt="BotPic"/>
+<p>
+  <img src="img/pristina.jpeg" width="250" alt="Pristina" style="margin-right: 10px;"/>
+  <img src="img/botpic.png" width="300" alt="BotPic"/>
+</p>
+
 ## Overview
 Pristina is a Discord bot designed specifically for Brawl Stars players, enabling users to predict the outcome of 1v1 matchups based on comprehensive player statistics. Developed to enhance the gaming experience, Pristina uses a logistic regression model trained on historical game data to provide real-time predictive analytics directly within your Discord server.
 
