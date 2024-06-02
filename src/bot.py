@@ -43,6 +43,8 @@ async def predict1v1(ctx, brawler: str, player1: str, player2: str):
     if ctx.author == bot.user:  # Prevent bot from responding to itself
         return
     
+    print(f"BRAWLLLERR: {brawler}")
+    
     def get_player_tag(player):
         # Check if input is a Discord mention
         if player.startswith('<@') and player.endswith('>'):

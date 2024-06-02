@@ -83,7 +83,7 @@ def predict_outcome(player1_stats, player2_stats, player1_name, player2_name):
     outcome = model.predict([[player1_score, player2_score]])
     winner_name = player1_name if outcome[0] else player2_name
 
-    embed = discord.Embed(title=f"1v1 {player1_stats['brawler_name'].capitalize()} Prediction Result", 
+    embed = discord.Embed(title=f"1v1 {player1_stats['brawler_name'].title()} Prediction Result", 
                           description="Comparison and prediction of player performance!", 
                           color=discord.Colour.dark_purple())
 
@@ -93,9 +93,13 @@ def predict_outcome(player1_stats, player2_stats, player1_name, player2_name):
 
     # Predicted winner in a separate row
     embed.add_field(name="<:AllStarLeague:1245902451593445478> Predicted Winner <:AllStarLeague:1245902451593445478>", value=winner_name, inline=False)
-
-    brawler_icon_url = f"https://cdn.brawlify.com/brawler/{player1_stats['brawler_name'].capitalize()}.png?v=1"
+    #print(player1_stats['brawler_name'].capitalize())
+    
+    brawler_name_modified = player1_stats['brawler_name'].title().replace(" ", "-") # for larry and lawrie
+    brawler_icon_url = f"https://cdn.brawlify.com/brawler/{brawler_name_modified}.png?v=1"
     embed.set_thumbnail(url=brawler_icon_url)
+
+
 
     return embed
 
