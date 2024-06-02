@@ -56,7 +56,6 @@ def get_player_metrics(player_tag: str, specific_brawler: str):
     return None  # Return None if no brawler matches
 
 def calculate_weighted_score(player_stats):
-    # Assuming typical maximum values for normalization purposes; adjust as real data informs
     #print(player_stats)
     max_values = {
         'brawler_rank': 35,  # Typically ranks range from 1 to 35
@@ -85,7 +84,7 @@ def predict_outcome(player1_stats, player2_stats, player1_name, player2_name):
     winner_name = player1_name if outcome[0] else player2_name
 
     embed = discord.Embed(title=f"1v1 {player1_stats['brawler_name'].capitalize()} Prediction Result", 
-                          description="<:uhhhhh:1210245240040984637> Comparison and prediction of player performance.", 
+                          description="Comparison and prediction of player performance!", 
                           color=discord.Colour.dark_purple())
 
     # Player details with score in bold
