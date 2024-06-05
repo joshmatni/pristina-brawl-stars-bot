@@ -92,7 +92,7 @@ def predict_outcome(player1_stats, player2_stats, player1_name, player2_name):
     embed.add_field(name=f"<a:ShenronFriends:1247653282734669844> {player2_name}", value=f"<:brstar:1245904050747346997> Experience Level: {player2_stats['exp_level']}\n<:BStrophy:1245900269611520070> Trophies: {player2_stats['highest_account_trophies']}\n<:3vs3:1245909477669081179> 3vs3 Victories: {player2_stats['3vs3_victories']}\n<:rank40bs1:1245916371133399050> {player2_stats['brawler_name'].capitalize()} Rank: {player2_stats['brawler_rank']}\n<:bsnote:1247653827008794838> **Overall Score: {player2_score:.2f}**", inline=False)
 
     # Predicted winner in a separate row
-    embed.add_field(name="<a:ShenronStarLeague:1245904517451481088> Predicted Winner <a:ShenronStarLeague:1245904517451481088>", value=winner_name, inline=False)
+    embed.add_field(name="<a:ShenronStarLeague:1245904517451481088>Predicted Winner<a:ShenronStarLeague:1245904517451481088>", value=winner_name, inline=False)
     #print(player1_stats['brawler_name'].capitalize())
     
     brawler_name_modified = player1_stats['brawler_name'].title().replace(" ", "-") # for larry and lawrie

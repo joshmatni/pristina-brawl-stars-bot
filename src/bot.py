@@ -35,15 +35,13 @@ async def on_ready() -> None:
     print(f"{bot.user} is now running!")
     await bot.tree.sync()
 
-import discord
-from discord.ext import commands
 
 @bot.hybrid_command(description="Compares two players using a specified brawler to predict the winner of a 1v1 match.")
 async def predict1v1(ctx, brawler: str, player1: str, player2: str):
     if ctx.author == bot.user:  # Prevent bot from responding to itself
         return
     
-    print(f"BRAWLLLERR: {brawler}")
+    #print(f"BRAWLLLERR: {brawler}")
     
     def get_player_tag(player):
         # Check if input is a Discord mention
@@ -113,6 +111,7 @@ async def register(ctx, player_tag: str):
     conn.close()
 
 def main() -> None:
+    #bot.add_cog(PrometheusCog(bot))
     bot.run(token=TOKEN)
 
 if __name__ == '__main__':
